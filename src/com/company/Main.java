@@ -15,7 +15,7 @@ public class Main {
 
 class BordSpel {
     public int huidigePlaats = 0;
-    public final int finishVeld = 10;
+    public final int finishVeld = 64;
     public int aantalOgen;
     public final Random random = new Random();
 
@@ -29,6 +29,17 @@ class BordSpel {
         return aantalOgen;
     }
 
+    public void checkVeld(int veld) {
+        if (veld == 10 || veld == 20 || veld == 30 || veld == 40 || veld == 50 || veld == 60){
+            int plaats = veld;
+            huidigePlaats += aantalOgen;
+
+            System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + plaats + ". BONUS STAPJES! Je staat op plaats "+ huidigePlaats );
+        } else {
+            System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + huidigePlaats + ".");
+        }
+    }
+
     public void spel() {
         try(Scanner scan = new Scanner(System.in)){
             while(huidigePlaats < finishVeld) {
@@ -38,8 +49,7 @@ class BordSpel {
                     dobbelsteenWorp();
                     huidigePlaats += aantalOgen;
                 }
-
-                System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + huidigePlaats);
+                checkVeld(huidigePlaats);
             }
         }
 
