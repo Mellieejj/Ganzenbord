@@ -29,20 +29,45 @@ class BordSpel {
         return aantalOgen;
     }
 
+    public void achteruit(boolean bonusStapjes) {
+        if (!bonusStapjes) {
+            huidigePlaats = finishVeld - (huidigePlaats - finishVeld);
+            System.out.println("Je hebt " + aantalOgen + " gegooid. Ojee, dat is over de " + finishVeld + ", in zijn achteruit! Je staat op plaats " + huidigePlaats);
+        }
+    }
+
+    public void achteruit(boolean bonusStapjes, int veld) {
+        huidigePlaats = finishVeld - (huidigePlaats - finishVeld);
+        if (bonusStapjes) {
+            System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Ojee dat is over de " + finishVeld + ", je staat op plaats " + huidigePlaats);
+        }
+    }
+
     public void checkVeld(int veld) {
         if (veld == 10 || veld == 20 || veld == 30 || veld == 40 || veld == 50 || veld == 60) {
             huidigePlaats += aantalOgen;
-            System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Je staat op plaats " + huidigePlaats);
+            if (huidigePlaats > finishVeld) {
+                achteruit(true, veld);
+            } else {
+                System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Je staat op plaats " + huidigePlaats);
+            }
         } else if (veld == 25 || veld == 45) {
             huidigePlaats = 0;
             System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ". Terug naar start.");
         } else {
-            System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ".");
+            if (huidigePlaats > finishVeld) {
+                achteruit(false);
+            } else {
+                System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ".");
+            }
         }
     }
 
     public void spel() {
         Scanner scan = new Scanner(System.in);
+//        System.out.println("Hoe heet speler 1?");
+//        Speler speler1 = new Speler(scan.nextLine());
+//        System.out.println(speler1.naam);
         while (huidigePlaats < finishVeld) {
             System.out.println("\nGooi je dobbelsteen (g).");
             String input = scan.next();
@@ -52,13 +77,14 @@ class BordSpel {
                 huidigePlaats += aantalOgen;
             }
             checkVeld(huidigePlaats);
+
+            if (huidigePlaats == 23) {
+                System.out.println("Gevangenis! GAME OVER! :-( ");
+                break;
+            }
         }
 
-        if (huidigePlaats == 23) {
-            System.out.println("Gevangenis! GAME OVER! :-( ");
-        }
-
-        if (huidigePlaats >= finishVeld) {
+        if (huidigePlaats == finishVeld) {
             System.out.println("Gewonnen!");
         }
     }
