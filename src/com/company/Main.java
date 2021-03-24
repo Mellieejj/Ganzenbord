@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -13,15 +14,21 @@ public class Main {
 }
 
 class BordSpel {
+    Scanner scan = new Scanner(System.in);
     public final int finishVeld = 63;
     boolean afgelopen = false;
     Dobbelsteen dobbelsteen = new Dobbelsteen();
-    Speler speler1 = new Speler("Speler 1");
-    Speler speler2 = new Speler("Speler 2");
-
-    Speler[] spelers = {speler1, speler2};
+    ArrayList<Speler> spelers = new ArrayList<Speler>();
 
     public void nieuwSpel() {
+        System.out.println("Hoeveel spelers doen er mee?");
+        int aantalSpelers = Integer.valueOf(scan.nextLine());
+
+        for (int i = 0; i < aantalSpelers; i++ ){
+            System.out.println("Hoe heet speler " + (i+1) + "?");
+            spelers.add(new Speler(scan.nextLine()));
+        }
+
         for (Speler speler : spelers) {
             System.out.println(speler.naam + " staat op: " + speler.huidigePlek);
         }
@@ -73,7 +80,7 @@ class BordSpel {
     }
 
     public void spel() {
-        Scanner scan = new Scanner(System.in);
+
 
         while (afgelopen != true) {
             for (Speler speler : spelers) {
