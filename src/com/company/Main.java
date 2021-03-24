@@ -13,71 +13,88 @@ public class Main {
 }
 
 class BordSpel {
-    public int huidigePlaats = 0;
     public final int finishVeld = 63;
+    boolean afgelopen = false;
     Dobbelsteen dobbelsteen = new Dobbelsteen();
-    public int aantalOgen;
+    Speler speler1 = new Speler("Melanie");
+    Speler speler2 = new Speler("Martin");
+
+    Speler[] spelers = {speler1, speler2};
 
     public void nieuwSpel() {
-        huidigePlaats = 0;
-        System.out.println("Je staat op start.");
+        for (Speler speler : spelers) {
+            System.out.println(speler.naam + " staat op: " + speler.huidigePlek);
+        }
+
+        System.out.println("Alle spelers staan op start.");
     }
 
-    public void achteruit(boolean bonusStapjes) {
+    public void achteruit(Speler speler, boolean bonusStapjes) {
         if (!bonusStapjes) {
-            huidigePlaats = finishVeld - (huidigePlaats - finishVeld);
-            System.out.println("Je hebt " + aantalOgen + " gegooid. Ojee, dat is over de " + finishVeld + ", in zijn achteruit! Je staat op plaats " + huidigePlaats);
+            speler.huidigePlek = finishVeld - (speler.huidigePlek - finishVeld);
+            System.out.println("Je hebt " + speler.laatsteWorp + " gegooid. Ojee, dat is over de " + finishVeld + ", in zijn achteruit! Je staat op plaats " + speler.huidigePlek + ".");
         }
     }
 
-    public void achteruit(boolean bonusStapjes, int veld) {
-        huidigePlaats = finishVeld - (huidigePlaats - finishVeld);
+    public void achteruit(Speler speler, boolean bonusStapjes, int veld) {
+        speler.huidigePlek = finishVeld - (speler.huidigePlek - finishVeld);
         if (bonusStapjes) {
-            System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Ojee dat is over de " + finishVeld + ", je staat op plaats " + huidigePlaats);
+            System.out.println("Je hebt " + speler.laatsteWorp + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Ojee dat is over de " + finishVeld + ", je staat op plaats " + speler.huidigePlek + ".");
         }
     }
 
-    public void checkVeld(int veld) {
+    public void checkVeld(Speler speler) {
+        int ogen = speler.laatsteWorp;
+        int veld = speler.huidigePlek;
         if (veld == 10 || veld == 20 || veld == 30 || veld == 40 || veld == 50 || veld == 60) {
-            huidigePlaats += aantalOgen;
-            if (huidigePlaats > finishVeld) {
-                achteruit(true, veld);
+            speler.huidigePlek += ogen;
+            if (speler.huidigePlek > finishVeld) {
+                achteruit(speler, true, veld);
             } else {
-                System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Je staat op plaats " + huidigePlaats);
+                System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Je staat op plaats " + speler.huidigePlek + ".");
             }
         } else if (veld == 25 || veld == 45) {
-            huidigePlaats = 0;
-            System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ". Terug naar start.");
+            speler.huidigePlek = 0;
+            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Terug naar start.");
         } else {
-            if (huidigePlaats > finishVeld) {
-                achteruit(false);
+            if (speler.huidigePlek > finishVeld) {
+                achteruit(speler, false);
             } else {
-                System.out.println("Je hebt " + aantalOgen + " gegooid. Je staat op plaats " + veld + ".");
+                System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ".");
             }
         }
     }
 
     public void spel() {
         Scanner scan = new Scanner(System.in);
-        while (huidigePlaats < finishVeld) {
-            System.out.println("\nGooi je dobbelsteen (g).");
-            String input = scan.next();
 
-            if (input.equals("g")) {
-               aantalOgen = dobbelsteen.gooien();
-                huidigePlaats += aantalOgen;
+        while (afgelopen != true) {
+            for (Speler speler : spelers) {
+
+                System.out.println("\n" + speler.naam + " gooi de dobbelsteen (g).");
+                String input = scan.next();
+                if (input.equals("g")) {
+                    speler.laatsteWorp = dobbelsteen.gooien();
+                    speler.huidigePlek += speler.laatsteWorp;
+                }
+                checkVeld(speler);
+
+                System.out.println("Je beurt is voorbij.");
+
+                if (speler.huidigePlek == 63) {
+                    afgelopen = true;
+                    System.out.println(speler.naam + " heeft gewonnen.");
+                    break;
+                }
             }
-            checkVeld(huidigePlaats);
-
-            if (huidigePlaats == 23) {
-                System.out.println("Gevangenis! GAME OVER! :-( ");
+            if (afgelopen) {
                 break;
             }
-        }
 
-        if (huidigePlaats == finishVeld) {
-            System.out.println("Gewonnen!");
+//            if (huidigePlaats == 23) {
+//                System.out.println("Gevangenis! GAME OVER! :-( ");
+//                break;
+//            }
         }
     }
-
 }
