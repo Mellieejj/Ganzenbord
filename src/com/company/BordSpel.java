@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class BordSpel {
     Scanner scan = new Scanner(System.in);
-    public final int finishVeld = 63;
-    boolean afgelopen = false;
+    private final int finishVeld = 63;
+    private boolean afgelopen = false;
     Dobbelsteen dobbelsteen = new Dobbelsteen();
     ArrayList<Speler> spelers = new ArrayList<Speler>();
 
@@ -54,16 +54,18 @@ public class BordSpel {
             } else {
                 System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Je staat op plaats " + speler.huidigePlek + ".");
             }
-        } else if (veld == 19){
+        } else if (veld == 19) {
             speler.herberg = true;
             System.out.println("Je hebt " + ogen + "gegooid. Je staat op plaats " + veld + ". Herberg. 1 beurt overslaan.");
-        }
-        else if (veld == 42) {
+        } else if (veld == 42) {
             speler.huidigePlek = 39;
             System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Doolhof! Terug naar 39.");
+        } else if (veld == 52) {
+            speler.gevangenisCounter = 3;
+            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". GEVANGENIS! Sla 3 beurten over.");
         } else if (veld == 58) {
             speler.huidigePlek = 0;
-            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + "Dood.... Terug naar start.");
+            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Dood.... Terug naar start.");
         } else {
             if (speler.huidigePlek > finishVeld) {
                 achteruit(speler, false);
@@ -73,22 +75,37 @@ public class BordSpel {
         }
     }
 
+    public void beurt(Speler speler) {
+        System.out.println("\n" + speler.naam + " gooi de dobbelsteen (g).");
+        String input = scan.next();
+
+        if (input.equals("g")) {
+            speler.laatsteWorp = dobbelsteen.gooien();
+            speler.huidigePlek += speler.laatsteWorp;
+            checkVeld(speler);
+            System.out.println("Je beurt is voorbij.");
+        } else {
+            System.out.println("Whoops, de dobbelsteen viel op de grond, probeer nog eens. \uD83D\uDE1C");
+            beurt(speler);
+        }
+    }
+
     public void spel() {
         while (!afgelopen) {
             for (Speler speler : spelers) {
-                if (speler.herberg){
-                    System.out.println("Je moet deze beurt overslaan.");
+                if (speler.herberg) {
+                    System.out.println("\n" + speler.naam + ", je moet deze beurt overslaan.");
                     speler.herberg = false;
-                } else {
-                    System.out.println("\n" + speler.naam + " gooi de dobbelsteen (g).");
-                    String input = scan.next();
-                    if (input.equals("g")) {
-                        speler.laatsteWorp = dobbelsteen.gooien();
-                        speler.huidigePlek += speler.laatsteWorp;
+                } else if (speler.huidigePlek == 52) {
+                    if (speler.gevangenisCounter == 0) {
+                        System.out.println("counter is 0");
+                        beurt(speler);
+                    } else {
+                        speler.gevangenisCounter--;
+                        System.out.println("\n" + speler.naam + ", je moet nog " + speler.gevangenisCounter + " beurt(en) overslaan.");
                     }
-                    checkVeld(speler);
-
-                    System.out.println("Je beurt is voorbij.");
+                } else {
+                    beurt(speler);
                 }
                 if (speler.huidigePlek == 63) {
                     afgelopen = true;
