@@ -1,14 +1,8 @@
 package com.company;
 
-public class Speler {
-    String naam;
-    int huidigePositie;
-    int worp;
+public class Speler{
+    int laatstWorp;
+    int huidigePlek;
     boolean beurt;
-
-    Speler(String naam){
-        this.naam = naam;
-
-    }
 
 }

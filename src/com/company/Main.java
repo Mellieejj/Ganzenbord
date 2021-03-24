@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -16,17 +15,12 @@ public class Main {
 class BordSpel {
     public int huidigePlaats = 0;
     public final int finishVeld = 63;
+    Dobbelsteen dobbelsteen = new Dobbelsteen();
     public int aantalOgen;
-    public final Random random = new Random();
 
     public void nieuwSpel() {
         huidigePlaats = 0;
         System.out.println("Je staat op start.");
-    }
-
-    public int dobbelsteenWorp() {
-        aantalOgen = random.nextInt(6) + 1; //om 1 t/m 6 te krijgen ipv 0 t/m 5.
-        return aantalOgen;
     }
 
     public void achteruit(boolean bonusStapjes) {
@@ -65,15 +59,12 @@ class BordSpel {
 
     public void spel() {
         Scanner scan = new Scanner(System.in);
-//        System.out.println("Hoe heet speler 1?");
-//        Speler speler1 = new Speler(scan.nextLine());
-//        System.out.println(speler1.naam);
         while (huidigePlaats < finishVeld) {
             System.out.println("\nGooi je dobbelsteen (g).");
             String input = scan.next();
 
             if (input.equals("g")) {
-                dobbelsteenWorp();
+               aantalOgen = dobbelsteen.gooien();
                 huidigePlaats += aantalOgen;
             }
             checkVeld(huidigePlaats);
