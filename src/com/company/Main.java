@@ -16,8 +16,8 @@ class BordSpel {
     public final int finishVeld = 63;
     boolean afgelopen = false;
     Dobbelsteen dobbelsteen = new Dobbelsteen();
-    Speler speler1 = new Speler("Melanie");
-    Speler speler2 = new Speler("Martin");
+    Speler speler1 = new Speler("Speler 1");
+    Speler speler2 = new Speler("Speler 2");
 
     Speler[] spelers = {speler1, speler2};
 
@@ -46,16 +46,23 @@ class BordSpel {
     public void checkVeld(Speler speler) {
         int ogen = speler.laatsteWorp;
         int veld = speler.huidigePlek;
-        if (veld == 10 || veld == 20 || veld == 30 || veld == 40 || veld == 50 || veld == 60) {
+
+        if (veld == 6) {
+            speler.huidigePlek = 12;
+            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Hee een brug! Oversteken naar 12!");
+        } else if (veld == 10 || veld == 20 || veld == 30 || veld == 40 || veld == 50 || veld == 60) {
             speler.huidigePlek += ogen;
             if (speler.huidigePlek > finishVeld) {
                 achteruit(speler, true, veld);
             } else {
                 System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Je staat op plaats " + speler.huidigePlek + ".");
             }
-        } else if (veld == 25 || veld == 45) {
+        } else if (veld == 42) {
+            speler.huidigePlek = 39;
+            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Doolhof! Terug naar 39.");
+        } else if (veld == 58) {
             speler.huidigePlek = 0;
-            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Terug naar start.");
+            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + "Dood.... Terug naar start.");
         } else {
             if (speler.huidigePlek > finishVeld) {
                 achteruit(speler, false);
@@ -90,11 +97,6 @@ class BordSpel {
             if (afgelopen) {
                 break;
             }
-
-//            if (huidigePlaats == 23) {
-//                System.out.println("Gevangenis! GAME OVER! :-( ");
-//                break;
-//            }
         }
     }
 }
