@@ -54,7 +54,11 @@ public class BordSpel {
             } else {
                 System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". BONUS STAPJES! Je staat op plaats " + speler.huidigePlek + ".");
             }
-        } else if (veld == 42) {
+        } else if (veld == 19){
+            speler.herberg = true;
+            System.out.println("Je hebt " + ogen + "gegooid. Je staat op plaats " + veld + ". Herberg. 1 beurt overslaan.");
+        }
+        else if (veld == 42) {
             speler.huidigePlek = 39;
             System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Doolhof! Terug naar 39.");
         } else if (veld == 58) {
@@ -72,17 +76,20 @@ public class BordSpel {
     public void spel() {
         while (!afgelopen) {
             for (Speler speler : spelers) {
+                if (speler.herberg){
+                    System.out.println("Je moet deze beurt overslaan.");
+                    speler.herberg = false;
+                } else {
+                    System.out.println("\n" + speler.naam + " gooi de dobbelsteen (g).");
+                    String input = scan.next();
+                    if (input.equals("g")) {
+                        speler.laatsteWorp = dobbelsteen.gooien();
+                        speler.huidigePlek += speler.laatsteWorp;
+                    }
+                    checkVeld(speler);
 
-                System.out.println("\n" + speler.naam + " gooi de dobbelsteen (g).");
-                String input = scan.next();
-                if (input.equals("g")) {
-                    speler.laatsteWorp = dobbelsteen.gooien();
-                    speler.huidigePlek += speler.laatsteWorp;
+                    System.out.println("Je beurt is voorbij.");
                 }
-                checkVeld(speler);
-
-                System.out.println("Je beurt is voorbij.");
-
                 if (speler.huidigePlek == 63) {
                     afgelopen = true;
                     System.out.println(speler.naam + " heeft gewonnen.");
