@@ -8,7 +8,7 @@ public class BordSpel {
     private final int finishVeld = 63;
     private boolean afgelopen = false;
     Dobbelsteen dobbelsteen = new Dobbelsteen();
-    ArrayList<Speler> spelers = new ArrayList<Speler>();
+    ArrayList<Speler> spelers = new ArrayList<>();
 
     public void nieuwSpel() {
         System.out.println("Hoeveel spelers doen er mee?");
@@ -56,7 +56,9 @@ public class BordSpel {
             }
         } else if (veld == 19) {
             speler.herberg = true;
-            System.out.println("Je hebt " + ogen + "gegooid. Je staat op plaats " + veld + ". Herberg. 1 beurt overslaan.");
+            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Herberg. 1 beurt overslaan.");
+        } else if (veld == 31) {
+            System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Je zit in de put, je kunt pas verder als er een andere speler voorbij komt of in de put beland.");
         } else if (veld == 42) {
             speler.huidigePlek = 39;
             System.out.println("Je hebt " + ogen + " gegooid. Je staat op plaats " + veld + ". Doolhof! Terug naar 39.");
@@ -93,9 +95,23 @@ public class BordSpel {
     public void spel() {
         while (!afgelopen) {
             for (Speler speler : spelers) {
+                speler.oudePlek = speler.huidigePlek;
+
                 if (speler.herberg) {
                     System.out.println("\n" + speler.naam + ", je moet deze beurt overslaan.");
                     speler.herberg = false;
+                } else if (speler.huidigePlek == 31) {
+                    for (Speler sp : spelers) {
+                        if (sp != speler) {
+                            if (sp.oudePlek < 31 && sp.huidigePlek >= 31) {
+                                System.out.println(speler.naam + ", je mag uit de put! " + sp.naam + " is je gepasseerd!");
+                                beurt(speler);
+                                break;
+                            } else {
+                                System.out.println("Helaas, " + sp.naam + " is niet voorbij jou gekomen.");
+                            }
+                        }
+                    }
                 } else if (speler.huidigePlek == 52) {
                     if (speler.gevangenisCounter == 0) {
                         System.out.println("counter is 0");
@@ -107,6 +123,7 @@ public class BordSpel {
                 } else {
                     beurt(speler);
                 }
+
                 if (speler.huidigePlek == 63) {
                     afgelopen = true;
                     System.out.println(speler.naam + " heeft gewonnen.");
